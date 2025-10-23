@@ -8,11 +8,23 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://mystic-oracle.netlify.app",
-      "https://mystic-oracle-app.netlify.app",
-    ],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://mystic-oracle.netlify.app",
+      ];
+
+      // ✅ Allow all Netlify preview subdomains
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        /\.netlify\.app$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
