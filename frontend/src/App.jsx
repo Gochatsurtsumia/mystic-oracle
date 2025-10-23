@@ -6,9 +6,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
 
-  const GROQ_API_KEY =
-    "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";
-  const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+  const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+  const API_URL = import.meta.env.VITE_GROQ_API_URL;
 
   async function generateText() {
     setLoading(true);
