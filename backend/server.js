@@ -6,13 +6,12 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-// ✅ FIX: Allow both localhost & your Netlify URL
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local development
-      "https://mystic-oracle.netlify.app", // production site (your Netlify domain)
-      "https://mystic-oracle-app.netlify.app", // preview builds (Netlify auto URLs)
+      "http://localhost:5173",
+      "https://mystic-oracle.netlify.app",
+      "https://mystic-oracle-app.netlify.app",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
