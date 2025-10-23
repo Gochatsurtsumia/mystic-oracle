@@ -41,26 +41,30 @@ RULES:
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData?.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("🔍 API response:", data);
+
+      // Defensive parsing — guarantees no crash
       const newText =
-        data.choices[0]?.message?.content || "⚠️ No response from oracle.";
+        data?.choices?.[0]?.message?.content ||
+        data?.message ||
+        data?.error?.message ||
+        "⚠️ The oracle is silent...";
 
       setTimeout(() => {
         setText(newText);
         setFading(false);
-        setTimeout(() => {
-          const fortuneElement = document.querySelector(".fortune-container");
-          if (fortuneElement) {
-            fortuneElement.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }
-        }, 200);
+        const fortuneElement = document.querySelector(".fortune-container");
+        if (fortuneElement) {
+          fortuneElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
       }, 300);
     } catch (error) {
       console.error("Error:", error);
@@ -73,7 +77,6 @@ RULES:
 
   return (
     <div className="app-container">
-      {/* === CONTACT BAR (desktop view) === */}
       <div className="contact-bar">
         <a href="tel:+995571103081">📞 +995571103081</a>
         <a href="mailto:gochatsurtsumia05@gmail.com">📧 Gmail</a>
@@ -93,7 +96,6 @@ RULES:
         </a>
       </div>
 
-      {/* === HAMBURGER MENU (mobile only) === */}
       <div
         className={`hamburger ${menuOpen ? "active" : ""}`}
         onClick={() => setMenuOpen(!menuOpen)}
@@ -138,7 +140,6 @@ RULES:
         </ul>
       </div>
 
-      {/* === ORACLE INTERFACE === */}
       <h2 className="oracle-title">Mystic Oracle</h2>
 
       <form
