@@ -8,40 +8,61 @@
 
 body {
   font-family: "Philosopher", sans-serif;
-  background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #0f001f 100%);
+  background: radial-gradient(circle at 20% 20%, #0f001f, #070010 80%);
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  color: #e0c3fc;
 }
 
-/* Animated stars background */
-body::before {
+/* === Dynamic aurora lights === */
+body::before,
+body::after {
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(2px 2px at 20% 30%, white, transparent),
-    radial-gradient(2px 2px at 60% 70%, white, transparent),
-    radial-gradient(1px 1px at 50% 50%, white, transparent),
-    radial-gradient(1px 1px at 80% 10%, white, transparent),
-    radial-gradient(2px 2px at 90% 60%, white, transparent),
-    radial-gradient(1px 1px at 33% 80%, white, transparent),
-    radial-gradient(1px 1px at 15% 90%, white, transparent);
-  background-size: 200% 200%;
-  animation: twinkle 8s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.5;
+body::before {
+  background: radial-gradient(
+    ellipse at 40% 60%,
+    rgba(102, 126, 234, 0.2),
+    transparent 70%
+  );
+  filter: blur(90px);
+  animation: aurora1 12s ease-in-out infinite alternate;
+}
+
+body::after {
+  background: radial-gradient(
+    ellipse at 60% 40%,
+    rgba(183, 148, 246, 0.25),
+    transparent 70%
+  );
+  filter: blur(100px);
+  animation: aurora2 14s ease-in-out infinite alternate;
+}
+
+@keyframes aurora1 {
+  0% {
+    transform: translateY(-10%) rotate(0deg);
   }
-  50% {
-    opacity: 1;
+  100% {
+    transform: translateY(10%) rotate(20deg);
+  }
+}
+
+@keyframes aurora2 {
+  0% {
+    transform: translateX(-10%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(10%) rotate(-20deg);
   }
 }
 
@@ -49,93 +70,128 @@ body::before {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 40px 20px;
-  min-height: 100vh;
+  padding: 120px 20px 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  animation: fadeIn 1.5s ease-in;
 }
 
-/* Crystal Ball */
+/* === Title / Crystal ball === */
 .oracle-title {
   font-family: "Cinzel", serif;
-  font-size: 3.5rem;
+  font-size: 3.8rem;
   font-weight: 700;
   background: linear-gradient(135deg, #b794f6, #e0c3fc, #8ec5fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
+  /* ✅ Both standard and vendor-prefixed */
   background-clip: text;
-  margin-bottom: 5px;
-  text-shadow: 0 0 30px rgba(183, 148, 246, 0.5);
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 0 40px rgba(183, 148, 246, 0.8);
+  margin-bottom: 10px;
   animation: glow 3s ease-in-out infinite;
   position: relative;
+}
+/* === Smooth transition for oracle text === */
+.fortune-text.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.fortune-text.fade-out {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 
 .oracle-title::before {
   content: "🔮";
   position: absolute;
   left: 50%;
-  top: -80px;
+  top: -90px;
   transform: translateX(-50%);
-  font-size: 4rem;
-  animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(183, 148, 246, 0.8));
+  font-size: 4.5rem;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(183, 148, 246, 0.8));
 }
 
 @keyframes glow {
   0%,
   100% {
-    text-shadow: 0 0 20px rgba(183, 148, 246, 0.5);
+    text-shadow: 0 0 20px rgba(183, 148, 246, 0.4);
   }
   50% {
-    text-shadow: 0 0 40px rgba(183, 148, 246, 0.9),
-      0 0 60px rgba(142, 197, 252, 0.6);
+    text-shadow: 0 0 50px rgba(183, 148, 246, 0.9),
+      0 0 80px rgba(142, 197, 252, 0.6);
   }
 }
 
 @keyframes float {
   0%,
   100% {
-    transform: translateX(-50%) translateY(0px);
+    transform: translateX(-50%) translateY(0);
   }
   50% {
-    transform: translateX(-50%) translateY(-15px);
+    transform: translateX(-50%) translateY(-12px);
   }
 }
 
-/* Form container */
+/* === Form === */
 .oracle-form {
   margin: 30px 0;
   width: 100%;
   max-width: 500px;
+  position: relative;
 }
 
 .form-label {
-  color: #e0c3fc;
   font-size: 1.2rem;
   margin-bottom: 15px;
   display: block;
   letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(224, 195, 252, 0.5);
+  color: #e0c3fc;
+  text-shadow: 0 0 12px rgba(224, 195, 252, 0.6);
 }
 
-/* Mystical Input */
+/* === Input === */
 .oracle-input {
   width: 100%;
-  max-width: 500px;
   padding: 15px 20px;
-  margin: 20px 0;
+  margin-top: 15px;
   font-size: 1.1rem;
-  font-family: "Philosopher", sans-serif;
-  background: rgba(26, 0, 51, 0.6);
-  border: 2px solid rgba(183, 148, 246, 0.4);
+  background: rgba(26, 0, 51, 0.55);
+  border: 2px solid rgba(183, 148, 246, 0.5);
   border-radius: 15px;
   color: #e0c3fc;
   outline: none;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .oracle-input::placeholder {
@@ -145,214 +201,396 @@ body::before {
 
 .oracle-input:focus {
   border-color: #b794f6;
-  box-shadow: 0 0 25px rgba(183, 148, 246, 0.6), 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 30px rgba(183, 148, 246, 0.8);
   transform: translateY(-2px);
 }
 
-/* Mystical Button */
+/* === Button === */
 .oracle-button {
-  padding: 15px 40px;
+  padding: 15px 50px;
+  margin-top: 15px;
   font-size: 1.2rem;
   font-family: "Cinzel", serif;
-  font-weight: 600;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
   border: none;
   border-radius: 50px;
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  letter-spacing: 1px;
+  transition: all 0.4s ease;
   position: relative;
   overflow: hidden;
-  letter-spacing: 1px;
-  margin-top: 10px;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
 }
 
 .oracle-button::before {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+
+.oracle-button:hover::before {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 125%;
+  }
 }
 
 .oracle-button:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6),
-    0 0 40px rgba(183, 148, 246, 0.4);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.7);
 }
 
-.oracle-button:hover:not(:disabled)::before {
-  width: 300px;
-  height: 300px;
-}
-
-.oracle-button:active:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.oracle-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-  box-shadow: none;
-}
-
-/* Loading State */
 .oracle-button.loading {
-  animation: pulse 1.5s ease-in-out infinite;
+  animation: pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%,
   100% {
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 25px rgba(102, 126, 234, 0.4);
   }
   50% {
-    box-shadow: 0 5px 30px rgba(183, 148, 246, 0.8);
+    box-shadow: 0 5px 40px rgba(183, 148, 246, 0.9);
   }
 }
 
-/* Fortune Display */
 .fortune-container {
   margin-top: 40px;
-  padding: 30px;
-  max-width: 1000px;
-  min-height: 150px;
-  background: rgba(26, 0, 51, 0.7);
-  border: 2px solid rgba(183, 148, 246, 0.3);
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 0 30px rgba(183, 148, 246, 0.1);
+  padding: 35px;
+  width: 900px;
+  max-width: 900px;
+  min-height: 160px;
+  background: rgba(26, 0, 51, 0.65);
+  border: 2px solid rgba(183, 148, 246, 0.35);
+  border-radius: 25px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 40px rgba(183, 148, 246, 0.15);
   position: relative;
   overflow: hidden;
+  animation: fadeIn 1.2s ease-in;
 }
 
-.fortune-container::before {
+.fortune-container::after {
   content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    45deg,
+  top: -30%;
+  left: -30%;
+  width: 160%;
+  height: 160%;
+  background: conic-gradient(
+    from 0deg,
     transparent,
-    rgba(183, 148, 246, 0.1),
-    transparent
+    rgba(183, 148, 246, 0.15),
+    transparent 60%
   );
-  animation: shine 3s infinite;
+  animation: rotateGlow 10s linear infinite;
 }
 
-@keyframes shine {
-  0% {
-    transform: rotate(0deg);
-  }
+@keyframes rotateGlow {
   100% {
     transform: rotate(360deg);
   }
 }
 
 .fortune-text {
-  color: #e0c3fc;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   line-height: 1.8;
-  letter-spacing: 0.5px;
   font-style: italic;
-  text-shadow: 0 0 15px rgba(224, 195, 252, 0.3);
+  text-shadow: 0 0 20px rgba(224, 195, 252, 0.5);
   position: relative;
   z-index: 1;
-  animation: fadeIn 1s ease-in;
+  animation: fadeInUp 1.5s ease;
 }
 
 .fortune-text.error {
-  color: #fc8181;
+  color: #ff8c8c;
   font-style: normal;
+  text-shadow: none;
 }
 
-@keyframes fadeIn {
-  from {
+@keyframes fadeInUp {
+  0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.fortune-text:empty::before {
-  content: "✨ The oracle awaits your question... ✨";
-  color: rgba(224, 195, 252, 0.4);
-  font-style: italic;
-}
-
-/* Decorative elements */
-.oracle-form::before,
-.oracle-form::after {
-  content: "✦";
-  color: #b794f6;
-  font-size: 2rem;
-  position: absolute;
-  animation: twinkleDecor 2s ease-in-out infinite;
-}
-
-.oracle-form::before {
-  left: -40px;
-  top: 50%;
-}
-
-.oracle-form::after {
-  right: -40px;
-  top: 50%;
-  animation-delay: 1s;
-}
-
-@keyframes twinkleDecor {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-/* Responsive design */
+/* === Responsiveness === */
 @media (max-width: 768px) {
   .oracle-title {
-    font-size: 2.5rem;
+    font-size: 2.7rem;
   }
 
   .oracle-title::before {
-    font-size: 3rem;
-    top: -60px;
+    font-size: 3.5rem;
+    top: -65px;
   }
 
   .oracle-input,
-  .oracle-form {
-    max-width: 90%;
-  }
-
   .fortune-container {
     max-width: 90%;
-    padding: 20px;
   }
 
   .fortune-text {
     font-size: 1.1rem;
   }
+}
 
-  .oracle-form::before,
-  .oracle-form::after {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.app-container > * {
+  margin-bottom: 25px;
+}
+.hamburger {
+  position: fixed;
+  top: 25px;
+  right: 30px;
+  width: 30px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.hamburger div {
+  width: 100%;
+  height: 4px;
+  background: #e0c3fc;
+  border-radius: 2px;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 10px rgba(183, 148, 246, 0.8);
+}
+
+.hamburger.active div:nth-child(1) {
+  transform: translateY(10px) rotate(45deg);
+}
+.hamburger.active div:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active div:nth-child(3) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: rgba(26, 0, 51, 0.9);
+  border-left: 2px solid rgba(183, 148, 246, 0.4);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.6);
+  color: #e0c3fc;
+  transition: right 0.4s ease;
+  padding: 70px 20px 20px;
+  z-index: 9;
+  backdrop-filter: blur(15px);
+}
+
+.menu.open {
+  right: 0;
+}
+
+.menu h3 {
+  font-family: "Cinzel", serif;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #b794f6;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin: 15px 0;
+  line-height: 1.6;
+}
+
+.menu a {
+  color: #8ec5fc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.menu a:hover {
+  color: #b794f6;
+  text-shadow: 0 0 8px rgba(183, 148, 246, 0.7);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  .menu {
+    width: 85%;
+  }
+}
+/* === CONTACT BAR (visible on desktop) === */
+.contact-bar {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  gap: 20px;
+  z-index: 10;
+  font-family: "Philosopher", sans-serif;
+  background: rgba(26, 0, 51, 0.5);
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(183, 148, 246, 0.4);
+  box-shadow: 0 0 20px rgba(183, 148, 246, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.contact-bar a {
+  color: #e0c3fc;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.contact-bar a:hover {
+  color: #b794f6;
+  text-shadow: 0 0 10px rgba(183, 148, 246, 0.8);
+}
+
+.hamburger {
+  position: fixed;
+  top: 25px;
+  right: 30px;
+  width: 30px;
+  height: 22px;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 11;
+}
+
+.hamburger div {
+  width: 100%;
+  height: 4px;
+  background: #e0c3fc;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(183, 148, 246, 0.8);
+  transition: all 0.3s ease;
+}
+
+.hamburger.active div:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger.active div:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active div:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: radial-gradient(
+    circle at top right,
+    rgba(26, 0, 51, 0.95),
+    rgba(10, 0, 25, 0.9)
+  );
+  border-left: 2px solid rgba(183, 148, 246, 0.5);
+  box-shadow: -5px 0 30px rgba(183, 148, 246, 0.25);
+  color: #e0c3fc;
+  transition: right 0.5s ease, opacity 0.6s ease;
+  padding: 80px 25px 20px;
+  z-index: 10;
+  opacity: 0;
+  backdrop-filter: blur(15px);
+}
+
+.menu.open {
+  right: 0;
+  opacity: 1;
+  animation: glowIn 1s ease forwards;
+}
+
+@keyframes glowIn {
+  0% {
+    box-shadow: -5px 0 20px rgba(183, 148, 246, 0);
+  }
+  100% {
+    box-shadow: -5px 0 35px rgba(183, 148, 246, 0.6);
+  }
+}
+
+.menu h3 {
+  font-family: "Cinzel", serif;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #b794f6;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  margin: 15px 0;
+}
+
+.menu a {
+  color: #8ec5fc;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  color: #b794f6;
+  text-shadow: 0 0 10px rgba(183, 148, 246, 0.8);
+}
+
+@media (max-width: 1008px) {
+  .contact-bar {
     display: none;
+  }
+
+  .hamburger {
+    display: flex;
   }
 }
