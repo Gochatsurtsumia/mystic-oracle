@@ -6,7 +6,19 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+// ✅ FIX: Allow both localhost & your Netlify URL
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local development
+      "https://mystic-oracle.netlify.app", // production site (your Netlify domain)
+      "https://mystic-oracle-app.netlify.app", // preview builds (Netlify auto URLs)
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 app.post("/api/chat", async (req, res) => {
@@ -23,19 +35,18 @@ app.post("/api/chat", async (req, res) => {
       }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      return res.status(response.status).json({ error: errorText });
-    }
-
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    console.error("Server Error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error fetching from Groq API:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.listen(5000, () =>
+app.get("/", (req, res) => {
+  res.send("🟢 Mystic Oracle backend is alive!");
+});
+
+app.listen(process.env.PORT || 5000, () =>
   console.log("✅ Proxy running on http://localhost:5000")
 );
