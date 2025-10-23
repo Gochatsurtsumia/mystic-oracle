@@ -8,13 +8,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       const allowedOrigins = [
         "http://localhost:5173",
         "https://mystic-oracle.netlify.app",
       ];
 
-      // ✅ Allow all Netlify preview subdomains
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
@@ -22,14 +21,17 @@ app.use(
       ) {
         callback(null, true);
       } else {
+        console.log("❌ Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
+app.options("*", cors());
 app.use(express.json());
 
 app.post("/api/chat", async (req, res) => {
